@@ -6,7 +6,7 @@
  */
 (() => {
   'use strict';
-  const VERSION = "0.1.0";
+  const VERSION = "0.1.1";
   const TAG = 'pogoda-tehnika-card';
   const FRAME_KEY = 'tehnika-cards:frame';
   const FRAME_EVENT = 'tehnika-cards-frame';
