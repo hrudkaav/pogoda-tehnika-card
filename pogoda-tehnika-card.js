@@ -1,4 +1,4 @@
-/* Погода · ТЕХНіКА — 0.1.0 alpha | MIT
+/* Погода · ТЕХНіКА | MIT
  * Install as a JavaScript module: /local/pogoda-tehnika-card.js
  * type: custom:pogoda-tehnika-card
  * entity: weather.forecast_home
@@ -6,6 +6,7 @@
  */
 (() => {
   'use strict';
+  const VERSION = "0.1.0";
   const TAG = 'pogoda-tehnika-card';
   const FRAME_KEY = 'tehnika-cards:frame';
   const FRAME_EVENT = 'tehnika-cards-frame';
@@ -117,6 +118,7 @@
       this.shadowRoot.addEventListener('change', e => this._change(e));
       this.shadowRoot.addEventListener('keydown', e => this._keydown(e));
     }
+    static get version() { return VERSION; }
     static getStubConfig(hass) {
       const entities = Object.keys(hass?.states || {}).filter(id => id.startsWith('weather.'));
       const entity = entities.find(id => !['unavailable','unknown'].includes(hass.states[id].state)) || entities[0] || '';

@@ -1,0 +1,35 @@
+name: Release
+on:
+  push:
+    branches: [main]
+    paths: ["pogoda-tehnika-card.js", "RELEASE_NOTES.md"]
+  workflow_dispatch:
+permissions:
+  contents: write
+jobs:
+  release:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - name: Read version
+        id: ver
+        env:
+          GH_TOKEN: ${{ github.token }}
+        run: |
+          VER=$(grep -oP 'const VERSION = "\K[0-9.]+' pogoda-tehnika-card.js)
+          test -n "$VER"
+          echo "ver=$VER" >> "$GITHUB_OUTPUT"
+          if gh release view "v$VER" >/dev/null 2>&1; then
+            echo "exists=true" >> "$GITHUB_OUTPUT"
+          else
+            echo "exists=false" >> "$GITHUB_OUTPUT"
+          fi
+      - name: Publish release
+        if: steps.ver.outputs.exists == 'false'
+        env:
+          GH_TOKEN: ${{ github.token }}
+        run: |
+          VER="${{ steps.ver.outputs.ver }}"
+          NOTES=RELEASE_NOTES.md; [ -f "$NOTES" ] || { echo "Версія $VER" > notes.md; NOTES=notes.md; }
+          gh release create "v$VER" pogoda-tehnika-card.js --target "$GITHUB_SHA" \
+            --title "Погода · ТЕХНіКА v$VER" --notes-file "$NOTES"
