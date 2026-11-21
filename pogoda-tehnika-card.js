@@ -6,7 +6,7 @@
  */
 (() => {
   'use strict';
-  const VERSION = "0.1.1";
+  const VERSION = "0.2.0";
   const TAG = 'pogoda-tehnika-card';
   const FRAME_KEY = 'tehnika-cards:frame';
   const FRAME_EVENT = 'tehnika-cards-frame';
@@ -31,6 +31,8 @@
   const PATHS = {
     settings: 'M19.14 12.94c.04-.31.06-.63.06-.94s-.02-.63-.07-.94l2.03-1.58c.18-.14.23-.41.12-.61l-1.92-3.32c-.12-.22-.37-.29-.59-.22l-2.39.96c-.5-.38-1.03-.7-1.62-.94L14.4 2.81A.488.488 0 0 0 13.92 2h-3.84c-.24 0-.44.17-.48.41l-.36 2.94c-.59.24-1.13.57-1.62.94l-2.39-.96c-.22-.08-.47 0-.59.22L2.72 8.87c-.12.21-.08.47.12.61l2.03 1.58c-.05.31-.09.64-.09.94s.02.63.07.94l-2.03 1.58c-.18.14-.23.41-.12.61l1.92 3.32c.12.22.37.29.59.22l2.39-.96c.5.38 1.03.7 1.62.94l.36 2.94c.04.24.24.41.48.41h3.84c.24 0 .44-.17.48-.41l.36-2.94c.59-.24 1.13-.56 1.62-.94l2.39.96c.22.08.47 0 .59-.22l1.92-3.32c.12-.22.07-.47-.12-.61l-2-1.58zM12 15.5A3.5 3.5 0 1 1 12 8a3.5 3.5 0 0 1 0 7.5z',
     close: 'M18.3 5.71 12 12l6.3 6.29-1.42 1.42L10.59 13.41 4.3 19.71 2.89 18.3 9.18 12 2.89 5.71 4.3 4.29 10.59 10.59 16.88 4.29z',
+    expand: 'M7.41 8.59 12 13.17l4.59-4.58L18 10l-6 6-6-6z',
+    back: 'M20 11H7.83l5.59-5.59L12 4l-8 8 8 8 1.42-1.41L7.83 13H20v-2z',
     sunny: 'M6.76 4.84 4.96 3.05 3.55 4.46l1.79 1.8 1.42-1.42zM1 10.5h3v2H1v-2zm10-10h2v3h-2v-3zm8.04 2.55-1.79 1.8 1.41 1.41 1.8-1.79-1.42-1.42zM20 10.5h3v2h-3v-2zm-8-5a6 6 0 1 0 0 12 6 6 0 0 0 0-12zm-1 14h2v3h-2v-3zm6.24-1.34 1.8 1.79 1.41-1.41-1.79-1.8-1.42 1.42zM3.55 18.54l1.41 1.41 1.8-1.79-1.42-1.42-1.79 1.8z',
     cloudy: 'M19.35 10.04A7.49 7.49 0 0 0 12 4a7.48 7.48 0 0 0-6.65 4.04A6 6 0 0 0 6 20h13a5 5 0 0 0 .35-9.96z',
     night: 'M9.37 5.51A7 7 0 0 0 18.49 14.63 7.01 7.01 0 0 1 5 12a7.01 7.01 0 0 1 4.37-6.49M12 3a9 9 0 1 0 9 9c0-.46-.04-.92-.1-1.36a5.5 5.5 0 0 1-7.54-7.54A9.02 9.02 0 0 0 12 3z',
@@ -89,14 +91,28 @@
     .days{display:flex;flex-direction:column;gap:2px}.day{display:grid;grid-template-columns:64px 24px 37px minmax(35px,1fr) 37px;gap:8px;align-items:center;min-height:35px;padding:4px 3px;border:1px solid transparent;border-radius:6px;text-align:left;background:transparent}.day-name{font-size:12px}.day-name small{font-size:10px;color:var(--quiet);display:block}.day .icon{width:20px;height:20px;color:var(--quiet)}.day-low{font-size:12px;color:var(--quiet);text-align:right}.day-high{font-size:13px;font-weight:500;text-align:right}.day-range{position:relative;height:22px;background:var(--off);border-radius:6px;box-shadow:0 0 0 1px var(--ring);overflow:hidden}.day-range span{position:absolute;top:0;bottom:0;border-radius:6px;background:var(--live)}
     .footer{margin-top:14px;padding-top:10px;border-top:1px solid var(--edge);display:flex;justify-content:space-between;align-items:center;gap:6px;font-size:10px;color:var(--quiet)}.brand{font-size:10px;font-weight:500;letter-spacing:1.4px}.updated{overflow:hidden;text-overflow:ellipsis;white-space:nowrap}.empty{font-size:12px;color:var(--quiet);padding:10px 0;min-height:36px}.warning{color:var(--warn);background:var(--warnbg);border:1px solid var(--warnline);padding:9px 10px;border-radius:8px;font-size:12px;margin-top:12px}
     .shade{position:absolute;inset:0;border-radius:inherit;background:transparent;z-index:9}.popover{position:absolute;top:52px;right:10px;left:10px;max-width:340px;margin-left:auto;max-height:calc(100% - 62px);overflow:auto;overscroll-behavior:contain;z-index:10;border:1px solid var(--edge);border-radius:10px;background:var(--popbg);box-shadow:var(--popshadow);padding:12px}.pop-head{display:flex;justify-content:space-between;align-items:center;margin-bottom:12px;gap:5px}.pop-title{font-size:14px;font-weight:500}.pop-head .icon-button{width:26px;height:26px}.field-label{display:block;font-size:12px;color:var(--quiet);margin:12px 0 7px}.segments{display:flex;gap:4px}.segments button{flex:1;border:1px solid var(--edge);border-radius:7px;padding:7px 5px;font-size:12px;color:var(--quiet);background:var(--fc)}.segments button[aria-pressed=true]{color:var(--onlive);background:var(--live);border-color:var(--live);font-weight:500}.toggle-row{display:flex;align-items:center;justify-content:space-between;gap:10px;font-size:13px;margin-top:16px}.toggle-row input{width:18px;height:18px;accent-color:var(--live)}.hint{color:var(--quiet);font-size:11px;margin:8px 0}.save-status{color:var(--quiet);font-size:11px;min-height:30px;margin-top:12px;padding-top:9px;border-top:1px solid var(--edge)}.detail-weather{display:flex;align-items:center;gap:10px;margin:10px 0 14px}.detail-weather .icon{color:var(--live);width:36px;height:36px}.detail-weather strong{font-size:27px;font-weight:500}.detail-description{color:var(--quiet);font-size:12px}.detail-row{display:flex;justify-content:space-between;gap:12px;padding:7px 0;border-top:1px solid var(--edge);font-size:12px}.detail-row span:first-child{color:var(--quiet)}.detail-row span:last-child{text-align:right}
-    @container(max-width:359px){.secondary{display:none!important}.heading{gap:7px}.city{font-size:11px;max-width:125px}.current{gap:10px}.hero-icon{width:43px;height:43px}.temperature{font-size:48px}.unit{font-size:16px}.metrics{gap:6px}.metric-value{font-size:14px}.metric-label{font-size:10px}.metric-unit{font-size:10px}.day{grid-template-columns:54px 20px 31px minmax(24px,1fr) 31px;gap:6px}.hour-temp{font-size:14px}.condition{font-size:12px;max-width:190px}}
-    @container(max-width:269px){.screen{padding:12px 10px}.city{display:none}.hero-icon{width:35px;height:35px}.temperature{font-size:42px}.metrics{grid-template-columns:repeat(2,minmax(0,1fr))}.metric:last-child{display:none}.hour-rain{font-size:9px}.day{gap:4px;grid-template-columns:45px 17px 28px minmax(16px,1fr) 28px}.legend{gap:7px}.brand{letter-spacing:.7px}}
+    .heading h2{min-width:0;overflow:hidden;text-overflow:ellipsis}.current.compact-current{border:0;min-height:100px;padding:14px 0 12px;gap:12px}.compact-extrema{margin-left:auto;flex:none;background:var(--fc);border-radius:8px;padding:6px 8px;font-size:12px;line-height:1.7}.compact-extrema small{display:block;color:var(--quiet);font-size:10px}.compact-extrema div{display:flex;align-items:baseline;justify-content:space-between;gap:8px}.compact-extrema span{color:var(--quiet);font-size:10px}.compact-extrema b{color:var(--fcink);font-weight:500;white-space:nowrap}
+    .compact-facts{display:flex;align-items:center;gap:18px;min-height:21px;flex-wrap:wrap}.compact-fact{display:flex;align-items:center;gap:5px;font-size:13px}.compact-fact .icon{color:var(--quiet);height:16px;width:16px}.fact-label,.fact-unit{color:var(--quiet);font-size:11px}.fact-value{font-weight:500}.compact-footer{display:flex;align-items:center;justify-content:space-between;gap:8px;margin-top:12px;padding-top:9px;border-top:1px solid var(--edge)}.compact-stamp{min-width:0;display:flex;flex-direction:column;gap:3px;color:var(--quiet);font-size:10px}.details-button{display:flex;align-items:center;justify-content:center;gap:5px;flex:none;background:var(--fc);border:1px solid var(--edge);border-radius:8px;padding:6px 9px;min-height:32px;font-size:12px;font-weight:500;color:var(--ink)}.details-button:hover{border-color:var(--quiet)}.details-button .icon{width:18px;height:18px;color:var(--quiet)}
+    .weather-dialog{position:fixed;inset:0;margin:auto;width:620px;max-width:calc(100vw - 24px);max-height:calc(100dvh - 24px);padding:6px;border:1px solid var(--rim);border-radius:13px;color:var(--ink);background:var(--frame);box-shadow:var(--popshadow);font:inherit;font-variant-numeric:tabular-nums;overflow:hidden;overscroll-behavior:contain}.weather-dialog:not([open]){display:none}.weather-dialog::backdrop{background:var(--dialogbackdrop);touch-action:none}.weather-dialog.settings-dialog{width:360px}.weather-dialog.frameless{padding:0;background:var(--sf);border-radius:17px}.dialog-inner{container-type:inline-size;min-width:0;background:var(--sf);border-radius:6px;overflow:hidden}.frameless .dialog-inner{border-radius:16px}.dialog-head{display:flex;align-items:center;gap:9px;padding:14px;border-bottom:1px solid var(--edge);min-width:0}.dialog-heading{min-width:0;flex:1}.dialog-heading h2{font-size:16px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}.dialog-city{font-size:12px;color:var(--quiet);margin-top:2px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}.dialog-scroll{padding:0 14px 14px;max-height:calc(100dvh - 112px);overflow:auto;overscroll-behavior:contain;scrollbar-width:thin;scrollbar-color:var(--ring) var(--sf)}.dialog-scroll[data-view=settings]{padding-top:1px}.dialog-scroll[data-view=detail]{padding-top:6px;min-height:min(300px,55dvh)}.dialog-current{display:flex;align-items:center;gap:12px;padding:14px 0 12px}.dialog-current .hero-icon{width:40px;height:40px}.dialog-current strong{font-size:32px;font-weight:500;line-height:1.1}.dialog-current p{font-size:12px;color:var(--quiet);margin:4px 0 0}.dialog-metrics{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:0 16px}.dialog-metrics .detail-row{font-size:12px;min-width:0}.dialog-scroll .hours{gap:7px}.dialog-scroll .empty{padding:8px 0;min-height:0}.dialog-status{margin-top:14px;color:var(--quiet);font-size:11px}.dialog-attribution{font-size:10px;color:var(--quiet);margin:12px 0 0}.detail-weather small{font-size:14px;color:var(--quiet);font-weight:400}.settings-dialog .field-label:first-child{margin-top:12px}
+    @container(max-width:359px){.secondary{display:none!important}.heading{gap:7px}.city{font-size:11px;max-width:125px}.current{gap:10px}.hero-icon{width:43px;height:43px}.temperature{font-size:48px}.unit{font-size:16px}.metrics{gap:6px}.metric-value{font-size:14px}.metric-label{font-size:10px}.metric-unit{font-size:10px}.day{grid-template-columns:54px 20px 31px minmax(24px,1fr) 31px;gap:6px}.hour-temp{font-size:14px}.condition{font-size:12px;max-width:190px}.compact-facts{gap:13px}.compact-extrema{padding:5px 7px}.compact-current .condition{max-width:155px}.dialog-metrics{grid-template-columns:minmax(0,1fr)}.dialog-scroll .hours{gap:2px}}
+    @container(max-width:269px){.screen{padding:12px 10px}.city{display:none}.hero-icon{width:35px;height:35px}.temperature{font-size:42px}.metrics{grid-template-columns:repeat(2,minmax(0,1fr))}.metric:last-child{display:none}.hour-rain{font-size:9px}.day{gap:4px;grid-template-columns:45px 17px 28px minmax(16px,1fr) 28px}.legend{gap:7px}.brand{letter-spacing:.7px}.compact-current{gap:8px!important}.compact-current .condition{max-width:118px}.compact-extrema{padding:4px 5px}.compact-extrema div{gap:5px}.compact-extrema small{display:none}.compact-facts{gap:9px}.details-button{padding:6px}.dialog-metrics{grid-template-columns:minmax(0,1fr)}}
   `;
 
   class PogodaTehnikaCard extends HTMLElement {
     constructor() {
       super();
       this.attachShadow({mode:'open'});
+      // Keep the native dialog node stable while HA state and forecast events update.
+      // showModal() puts it in the browser's top layer, outside dashboard clipping.
+      this.shadowRoot.innerHTML = `<style>${CSS}</style><div class="card-root"></div><dialog class="weather-dialog" aria-labelledby="weather-dialog-title"></dialog>`;
+      this._cardRoot = this.shadowRoot.querySelector('.card-root');
+      this._dialog = this.shadowRoot.querySelector('.weather-dialog');
+      this._dialog.addEventListener('cancel', event => { event.preventDefault(); this._close(); });
+      this._dialog.addEventListener('click', event => {
+        if (event.target !== this._dialog) return;
+        const rect = this._dialog.getBoundingClientRect();
+        if (event.clientX < rect.left || event.clientX > rect.right || event.clientY < rect.top || event.clientY > rect.bottom) this._close();
+      });
       this._forecasts = {}; this._subscriptions = []; this._forecastEpoch = 0;
       this._appearance = {}; this._frame = readCache(FRAME_KEY) === 'off' ? 'off' : 'on';
       this._saveQueue = Promise.resolve(); this._profileEpoch = 0;
@@ -132,7 +148,8 @@
       for (const key of ['show_hourly','show_daily','show_precipitation']) if (config[key] !== undefined && typeof config[key] !== 'boolean') throw new Error(`${key}: потрібне значення true або false`);
       for (const [key,min,max] of [['hours',3,8],['days',3,7]]) if (config[key] !== undefined && (!Number.isInteger(config[key]) || config[key]<min || config[key]>max)) throw new Error(`${key}: ціле число від ${min} до ${max}`);
       this._config = {...DEFAULTS,...config};
-      this._open = null; this._sync(); this._render();
+      this._open = null; this._detail = null; this._forecastScroll = 0;
+      this._sync(); this._render();
     }
     set hass(hass) {
       const previous = this._hass;
@@ -160,8 +177,9 @@
       document.removeEventListener('visibilitychange',this._onVisibility);
       clearInterval(this._timer); this._timer = null;
       this._stopForecasts(); this._stopProfile(); this._open = null;
+      this._detail = null; if (this._dialog.open) this._dialog.close();
     }
-    getCardSize() { return Math.ceil((this.shadowRoot.querySelector('ha-card')?.getBoundingClientRect().height || 580)/50); }
+    getCardSize() { return Math.ceil((this.shadowRoot.querySelector('ha-card')?.getBoundingClientRect().height || 250)/50); }
     getGridOptions() { return {columns:12,rows:'auto',min_columns:6}; }
     _entity() { return this._config?.entity || PogodaTehnikaCard.getStubConfig(this._hass).entity; }
     _state() { return this._hass?.states?.[this._entity()]; }
@@ -273,7 +291,8 @@
         stripe:`repeating-linear-gradient(135deg, ${dark?'#ffcc1f':'#ffc20e'} 0 2.5px, ${dark?'#b08a14':'#b08300'} 2.5px 5px)`,
         warn:dark?'#ff8a50':'#c2410c',warnbg:dark?'rgba(255,138,80,.14)':'rgba(234,88,12,.12)',warnline:dark?'rgba(255,138,80,.45)':'rgba(194,65,12,.45)',
         popshadow:`0 10px 28px rgba(0,0,0,${dark?'.45':'.2'})`,tick:dark?'rgba(255,255,255,.22)':'rgba(0,0,0,.42)',
-        past:dark?'rgba(0,0,0,.45)':'rgba(255,255,255,.45)',nowbg:dark?'#f5f5f0':'#2a2f33',nowink:dark?'#2a2f33':'#fff'};
+        past:dark?'rgba(0,0,0,.45)':'rgba(255,255,255,.45)',nowbg:dark?'#f5f5f0':'#2a2f33',nowink:dark?'#2a2f33':'#fff',
+        dialogbackdrop:dark?'rgba(0,0,0,.45)':'rgba(0,0,0,.2)'};
     }
     _days() {
       const today = dayKey(Date.now());
@@ -293,36 +312,88 @@
     }
     _render() {
       if (!this._config) return;
-      const focus = this.shadowRoot.activeElement;
-      const focusKey = focus?.dataset.focus;
-      const popScroll = this.shadowRoot.querySelector('.popover')?.scrollTop || 0;
+      const focusKey = this.shadowRoot.activeElement?.dataset.focus;
       for (const [key,value] of Object.entries(this._colors())) this.style.setProperty(`--${key}`,value);
       const state = this._state();
       const available = !!state && !['unavailable','unknown'].includes(state.state);
       const attr = available ? state.attributes || {} : {};
       const condition = available ? state.state : state?.state || 'unknown';
-      const today = this._days().find(x => dayKey(x.time) === dayKey(Date.now()));
-      const highLow = today ? `${this._temperature(today.templow)} / ${this._temperature(today.temperature)}` : 'Прогноз на сьогодні';
+      const today = (this._forecasts.daily || []).find(x => dayKey(x.time) === dayKey(Date.now()));
+      const extrema = today && (number(today.templow) !== null || number(today.temperature) !== null)
+        ? `<div class="compact-extrema"><small>Сьогодні</small>${number(today.templow) !== null ? `<div><span>мін.</span><b>${this._temperature(today.templow)}</b></div>` : ''}${number(today.temperature) !== null ? `<div><span>макс.</span><b>${this._temperature(today.temperature)}</b></div>` : ''}</div>` : '';
       const city = this._config.city || state?.attributes?.friendly_name || '';
       const time = state?.last_updated && Number.isFinite(Date.parse(state.last_updated)) ? dateFmt(state.last_updated,{hour:'2-digit',minute:'2-digit'}) : '—';
-      const windUnits = ({'km/h':'км/год','m/s':'м/с','mph':'миль/год','kn':'вузл.'})[attr.wind_speed_unit] || attr.wind_speed_unit || '';
-      this.shadowRoot.innerHTML = `<style>${CSS}</style><ha-card class="${this._frame === 'off'?'frameless':''}"><div class="screen">
+      const fact = (name,label,value,unit) => `<span class="compact-fact">${icon(name)}<span class="fact-label secondary">${label}</span><span class="fact-value">${fmt(value,1)}</span>${unit ? `<span class="fact-unit">${esc(unit)}</span>` : ''}</span>`;
+      const facts = [number(attr.wind_speed) !== null ? fact('wind','Вітер',attr.wind_speed,this._windUnit()) : '',number(attr.humidity) !== null ? fact('water','Вологість',attr.humidity,'%') : ''].join('');
+      this._cardRoot.innerHTML = `<ha-card class="${this._frame === 'off'?'frameless':''}"><div class="screen">
         <header class="header"><div class="heading"><h2>${esc(this._config.title || 'Погода')}</h2><span class="city" title="${esc(city)}">${esc(city)}</span></div><button class="icon-button" data-action="settings" data-focus="settings" aria-label="Налаштування вигляду" aria-haspopup="dialog" aria-expanded="${this._open === 'settings'}">${icon('settings')}</button></header>
-        <div class="strip"><span>Відчувається<span class="secondary"> як</span></span><strong>${this._temperature(attr.apparent_temperature)}</strong><span class="strip-right">${highLow}</span></div>
-        <button class="current" data-action="current" data-focus="current" aria-label="Докладніше про поточну погоду" aria-haspopup="dialog">${weatherIcon(condition,'hero-icon')}<div><div class="temperature">${signed(attr.temperature)}<span class="unit">${esc(attr.temperature_unit || '°C')}</span></div><div class="condition">${esc(CONDITIONS[condition] || 'Погодні дані')}</div></div><div class="now-meta secondary">Київський час<br><b>${dateFmt(Date.now(),{hour:'2-digit',minute:'2-digit'})}</b><br>${dateFmt(Date.now(),{day:'numeric',month:'short'})}</div></button>
-        <div class="metrics"><div class="metric"><div class="metric-label">${icon('wind')}Вітер</div><div class="metric-value">${fmt(attr.wind_speed,1)} <span class="metric-unit">${esc(windUnits)}</span></div></div><div class="metric"><div class="metric-label">${icon('water')}Вологість</div><div class="metric-value">${fmt(attr.humidity)} <span class="metric-unit">%</span></div></div><div class="metric"><div class="metric-label">${icon('cloudy')}Тиск</div><div class="metric-value">${fmt(attr.pressure)} <span class="metric-unit">${esc(attr.pressure_unit || '')}</span></div></div></div>
-        ${!available ? `<div class="warning" role="status">${!this._entity() ? 'Додайте інтеграцію погоди або оберіть сутність weather.* у редакторі.' : !state ? 'Сутність погоди не знайдено. Перевірте її у редакторі.' : 'Джерело погоди зараз недоступне.'}</div>` : condition === 'exceptional' ? '<div class="warning" role="status">Джерело повідомляє про незвичайні погодні умови.</div>' : ''}
-        ${this._config.show_hourly ? this._renderHourly() : ''}${this._config.show_precipitation ? this._renderRain() : ''}${this._config.show_daily ? this._renderDaily() : ''}
-        <footer class="footer"><span class="brand">ТЕХНіКА</span><span class="updated">Дані: ${esc(time)}<span class="secondary"> · Київський час</span></span></footer>
-        ${this._open ? this._renderPopover(attr,condition) : ''}
+        <button class="current compact-current" data-action="forecast" data-focus="current" aria-label="Відкрити детальний прогноз погоди" aria-haspopup="dialog" aria-expanded="${!!this._open && this._open !== 'settings'}">${weatherIcon(condition,'hero-icon')}<div><div class="temperature">${signed(attr.temperature)}<span class="unit">${esc(attr.temperature_unit || '°C')}</span></div><div class="condition">${esc(CONDITIONS[condition] || 'Погодні дані')}</div></div>${extrema}</button>
+        ${facts ? `<div class="compact-facts">${facts}</div>` : ''}
+        ${this._weatherWarning(available,condition)}
+        <footer class="compact-footer"><div class="compact-stamp"><span class="brand">ТЕХНіКА</span><span>Дані: ${esc(time)}</span></div><button class="details-button" data-action="forecast" data-focus="forecast" aria-label="Детальніше про погоду" aria-haspopup="dialog" aria-expanded="${!!this._open && this._open !== 'settings'}">Детальніше${icon('expand')}</button></footer>
       </div></ha-card>`;
-      const pop = this.shadowRoot.querySelector('.popover');
-      if (pop) pop.scrollTop = popScroll;
+      this._renderDialog(attr,condition,city,available,time);
       if (focusKey) this.shadowRoot.querySelector(`[data-focus="${focusKey}"]`)?.focus({preventScroll:true});
+    }
+    _windUnit() {
+      const unit = this._state()?.attributes?.wind_speed_unit || '';
+      return ({'km/h':'км/год','m/s':'м/с','mph':'миль/год','kn':'вузл.'})[unit] || unit;
+    }
+    _weatherWarning(available,condition) {
+      if (!available) return `<div class="warning" role="status">${!this._entity() ? 'Додайте інтеграцію погоди або оберіть сутність weather.* у редакторі.' : !this._state() ? 'Сутність погоди не знайдено. Перевірте її у редакторі.' : 'Джерело погоди зараз недоступне.'}</div>`;
+      return condition === 'exceptional' ? '<div class="warning" role="status">Джерело повідомляє про незвичайні погодні умови.</div>' : '';
+    }
+    _dataRows(entry,forecast = false) {
+      const attr = this._state()?.attributes || {};
+      const fields = [
+        ['Відчувається як',entry.apparent_temperature,attr.temperature_unit || '°C'],
+        ['Вітер',entry.wind_speed,this._windUnit()],
+        ['Вологість',entry.humidity,'%'],
+        ['Тиск',entry.pressure,attr.pressure_unit || ''],
+        ...(forecast ? [['Ймовірність опадів',percent(entry.precipitation_probability),'%'],['Кількість опадів',entry.precipitation,attr.precipitation_unit || ''],['Мінімальна температура',entry.templow,attr.temperature_unit || '°C']] : [])
+      ];
+      return fields.filter(([,value]) => number(value) !== null).map(([label,value,unit]) => `<div class="detail-row"><span>${label}</span><span>${fmt(value,1)}${unit ? ` ${esc(unit)}` : ''}</span></div>`).join('');
+    }
+    _forecastStatus() {
+      const enabled = [this._config.show_hourly || this._config.show_precipitation,this._config.show_daily].some(Boolean);
+      const pending = enabled && !Object.keys(this._forecasts).length && !Object.keys(this._forecastErrors || {}).length && !!Number(this._state()?.attributes?.supported_features || 0);
+      const failed = Object.keys(this._forecastErrors || {}).length > 0;
+      if (failed) return '<p class="dialog-status" role="status">Прогноз тимчасово недоступний. Повторюємо підключення…</p>';
+      if (pending) return '<p class="dialog-status" role="status">Завантаження прогнозу…</p>';
+      return `<p class="dialog-status">${enabled ? 'Джерело поки не надало даних прогнозу.' : 'Показ прогнозів вимкнено в редакторі картки.'}</p>`;
+    }
+    _renderDialog(attr,condition,city,available,time) {
+      const dialog = this._dialog;
+      if (!this._open) {
+        if (dialog.open) dialog.close();
+        dialog.innerHTML = '';
+        return;
+      }
+      const previousView = dialog.dataset.view;
+      const scroll = dialog.querySelector('.dialog-scroll')?.scrollTop || 0;
+      if (previousView === 'forecast') this._forecastScroll = scroll;
+      const settings = this._open === 'settings';
+      const detail = this._open === 'detail';
+      const entry = this._detail?.entry || {};
+      const title = settings ? 'Вигляд картки' : detail && this._detail ? dateFmt(this._detail.time,{day:'numeric',month:'short',hour:'2-digit',minute:'2-digit'}) : 'Погода · детальніше';
+      let content;
+      if (settings) content = this._settingsContent();
+      else if (detail) content = this._detailContent(entry);
+      else {
+        const forecasts = [this._config.show_hourly ? this._renderHourly() : '',this._config.show_precipitation ? this._renderRain() : '',this._config.show_daily ? this._renderDaily() : ''].join('');
+        content = `<div class="dialog-current">${weatherIcon(condition,'hero-icon')}<div><strong>${signed(attr.temperature)} <span class="metric-unit">${esc(attr.temperature_unit || '°C')}</span></strong><p>${esc(CONDITIONS[condition] || 'Погодні дані')}</p></div></div><div class="dialog-metrics">${this._dataRows(attr)}</div>${this._weatherWarning(available,condition)}${forecasts || this._forecastStatus()}<p class="dialog-attribution">Дані: ${esc(time)} · Київський час${this._state()?.attributes?.attribution ? ` · ${esc(this._state().attributes.attribution)}` : ''}</p>`;
+      }
+      dialog.className = `weather-dialog ${settings ? 'settings-dialog' : ''} ${this._frame === 'off' ? 'frameless' : ''}`;
+      dialog.dataset.view = this._open;
+      dialog.innerHTML = `<div class="dialog-inner"><header class="dialog-head">${detail ? `<button class="icon-button" data-action="back" data-focus="back" aria-label="Назад до прогнозу">${icon('back')}</button>` : ''}<div class="dialog-heading"><h2 id="weather-dialog-title">${esc(title)}</h2>${!settings && city ? `<div class="dialog-city">${esc(city)}</div>` : ''}</div><button class="icon-button" data-action="close" data-focus="close" aria-label="Закрити">${icon('close')}</button></header><div class="dialog-scroll" data-view="${this._open}">${content}</div></div>`;
+      if (!dialog.open && this.isConnected) dialog.showModal();
+      const scroller = dialog.querySelector('.dialog-scroll');
+      if (scroller) scroller.scrollTop = previousView === this._open ? scroll : this._open === 'forecast' ? this._forecastScroll || 0 : 0;
     }
     _renderHourly() {
       const list = (this._forecasts.hourly || []).filter(x => x.time+HOUR>Date.now()).slice(0,this._config.hours);
-      return `<section><div class="section-head"><h3>Найближчі години</h3><span class="secondary">Температура · опади</span></div>${list.length ? `<div class="hours" style="--count:${list.length}">${list.map((x,i) => `<button class="hour" data-action="hour" data-index="${i}" data-focus="hour-${i}" aria-label="Прогноз на ${esc(dateFmt(x.time,{hour:'2-digit',minute:'2-digit'}))}" aria-haspopup="dialog"><span class="hour-time">${dateFmt(x.time,{hour:'2-digit',minute:'2-digit'})}</span>${weatherIcon(x.condition)}<span class="hour-temp">${this._temperature(x.temperature)}</span><span class="hour-rain">${this._precipitation(x)}</span></button>`).join('')}</div>` : this._forecastEmpty('hourly')}</section>`;
+      if (!list.length) return '';
+      return `<section><div class="section-head"><h3>Найближчі години</h3><span class="secondary">Температура · опади</span></div><div class="hours" style="--count:${list.length}">${list.map((x,i) => `<button class="hour" data-action="hour" data-index="${i}" data-focus="hour-${i}" aria-label="Прогноз на ${esc(dateFmt(x.time,{hour:'2-digit',minute:'2-digit'}))}" aria-haspopup="dialog"><span class="hour-time">${dateFmt(x.time,{hour:'2-digit',minute:'2-digit'})}</span>${weatherIcon(x.condition)}<span class="hour-temp">${this._temperature(x.temperature)}</span>${this._precipitation(x) !== '—' ? `<span class="hour-rain">${this._precipitation(x)}</span>` : ''}</button>`).join('')}</div></section>`;
     }
     _rainSlots() {
       const now = Date.now();
@@ -340,10 +411,12 @@
       const slots = this._rainSlots();
       const marker = ((Date.now()-slots[0].time)/HOUR/24)*100;
       const anyData = slots.some(x => x.probability !== null);
+      if (!anyData) return '';
       return `<section class="rain-section"><div class="section-head"><h3>Ймовірність опадів · 24 год</h3><span class="secondary">0–100%</span></div><div class="timeline-wrap"><div class="timeline" aria-label="Погодинна ймовірність опадів">${slots.map((x,i) => `<button class="rain-slot ${x.probability === null ? 'missing' : x.probability>0 && x.probability<70 ? 'possible' : ''} ${x.time+HOUR<=Date.now()?'past':''}" data-action="rain" data-index="${i}" data-focus="rain-${i}" aria-label="${esc(dateFmt(x.time,{day:'numeric',month:'short',hour:'2-digit',minute:'2-digit'}))}: ${x.probability === null ? 'немає даних' : `${fmt(x.probability)}%`}" aria-haspopup="dialog" title="${esc(dateFmt(x.time,{hour:'2-digit',minute:'2-digit'}))}: ${x.probability === null ? 'немає даних' : `${fmt(x.probability)}%`}">${x.probability !== null ? `<span class="rain-fill" style="opacity:${x.probability>0 ? .25+x.probability*.0075 : 0}"></span>` : ''}</button>`).join('')}</div><div class="elapsed" style="width:${marker}%"></div><div class="marker" style="left:${marker}%"><span>${dateFmt(Date.now(),{hour:'2-digit',minute:'2-digit'})}</span></div></div><div class="hour-axis">${[0,6,12,18,24].map(i=>`<span class="${localHour(slots[0].time+i*HOUR) % 12 === 0?'major':''}">${dateFmt(slots[0].time+i*HOUR,{hour:'2-digit',hourCycle:'h23'})}</span>`).join('')}</div><div class="legend"><span><i class="key dry"></i>0%</span><span><i class="key"></i>70–100%</span><span><i class="key possible"></i>1–69%</span><span><i class="key missing"></i>Немає даних</span></div>${!anyData ? '<div class="empty">Немає погодинних даних про ймовірність опадів.</div>' : ''}</section>`;
     }
     _renderDaily() {
       const list = this._days();
+      if (!list.length) return '';
       const temperatures = list.flatMap(x=>[number(x.templow),number(x.temperature)]).filter(x=>x!==null);
       const min = temperatures.length?Math.min(...temperatures):0, max = temperatures.length?Math.max(...temperatures):1;
       const span = Math.max(1,max-min);
@@ -351,26 +424,18 @@
       return `<section><div class="section-head"><h3>${twice?'День і ніч':'Найближчі дні'}</h3><span class="secondary">${twice?'Прогноз за період':'Мін. / макс.'}</span></div>${list.length ? `<div class="days">${list.map((x,i) => {
         const low=number(x.templow), high=number(x.temperature);
         const left=low===null?0:(low-min)/span*100, width=low===null || high===null?0:Math.max(3,(high-low)/span*100);
-        return `<button class="day" data-action="day" data-index="${i}" data-focus="day-${i}" aria-label="Прогноз: ${esc(dateFmt(x.time,{weekday:'long',day:'numeric',month:'long'}))}${twice ? x.is_daytime ? ', день' : ', ніч' : ''}" aria-haspopup="dialog"><span class="day-name">${dayKey(x.time)===dayKey(Date.now())?'Сьогодні':dateFmt(x.time,{weekday:'short'})}<small>${twice ? x.is_daytime?'День':'Ніч' : dateFmt(x.time,{day:'numeric',month:'2-digit'})}</small></span>${weatherIcon(x.condition)}<span class="day-low">${this._temperature(x.templow)}</span><span class="day-range"><span style="left:${left}%;width:${Math.min(width,100-left)}%"></span></span><span class="day-high">${this._temperature(x.temperature)}</span></button>`;
+        return `<button class="day" data-action="day" data-index="${i}" data-focus="day-${i}" aria-label="Прогноз: ${esc(dateFmt(x.time,{weekday:'long',day:'numeric',month:'long'}))}${twice ? x.is_daytime ? ', день' : ', ніч' : ''}" aria-haspopup="dialog"><span class="day-name">${dayKey(x.time)===dayKey(Date.now())?'Сьогодні':dateFmt(x.time,{weekday:'short'})}<small>${twice ? x.is_daytime?'День':'Ніч' : dateFmt(x.time,{day:'numeric',month:'2-digit'})}</small></span>${weatherIcon(x.condition)}<span class="day-low">${number(x.templow) === null ? '' : this._temperature(x.templow)}</span><span class="day-range" ${low === null || high === null ? 'style="visibility:hidden"' : ''}><span style="left:${left}%;width:${Math.min(width,100-left)}%"></span></span><span class="day-high">${number(x.temperature) === null ? '' : this._temperature(x.temperature)}</span></button>`;
       }).join('')}</div>` : this._forecastEmpty('daily')}</section>`;
     }
-    _renderPopover(attr,condition) {
-      const settings = this._open === 'settings';
+    _settingsContent() {
       const segment = (key,label,options,current) => `<span class="field-label">${label}</span><div class="segments" role="group" aria-label="${label}">${options.map(([value,text])=>`<button data-action="appearance" data-key="${key}" data-value="${value}" data-focus="${key}-${value}" aria-pressed="${current===value}">${text}</button>`).join('')}</div>`;
-      let content, title;
-      if (settings) {
-        title = 'Вигляд картки';
-        content = `${segment('palette','Палітра',[['olive','Олива'],['graphite','Графіт']],this._appearance.palette || this._config.palette)}${segment('mode','Оформлення',[['auto','Авто'],['light','Світла'],['dark','Темна']],this._appearance.mode || this._config.mode)}<label class="toggle-row" for="frame-toggle">Рамка<input id="frame-toggle" data-action="frame" data-focus="frame" type="checkbox" ${this._frame==='on'?'checked':''}></label><p class="hint">Спільна для всіх карток ТЕХНіКА на цьому пристрої.</p><div class="save-status" role="status">${({loading:'Завантажуємо ваші налаштування…',saving:'Зберігаємо в профілі HA…',saved:'Вигляд збережено у вашому профілі HA.',local:'Збережено на пристрої. Профіль HA поки недоступний.'})[this._profileStatus] || 'Налаштування вигляду для вашого профілю HA.'}</div>`;
-      } else {
-        const entry = this._detail?.entry || attr;
-        const current = this._open === 'current';
-        title = current?'Поточна погода':this._detail ? dateFmt(this._detail.time,{day:'numeric',month:'short',hour:'2-digit',minute:'2-digit'}) : 'Прогноз';
-        const cond = current?condition:entry.condition;
-        const row = (label,value) => `<div class="detail-row"><span>${label}</span><span>${value}</span></div>`;
-        const unit = esc(attr.temperature_unit || this._state()?.attributes?.temperature_unit || '°C');
-        content = `<div class="detail-weather">${weatherIcon(cond)}<div><strong>${signed(entry.temperature)} ${unit}</strong><div class="detail-description">${esc(CONDITIONS[cond] || 'Немає даних')}</div></div></div>${row('Відчувається як',`${signed(entry.apparent_temperature)} ${unit}`)}${row('Вітер',`${fmt(entry.wind_speed,1)} ${esc(this._state()?.attributes?.wind_speed_unit || '')}`)}${row('Вологість',`${fmt(entry.humidity)} %`)}${row('Тиск',`${fmt(entry.pressure)} ${esc(this._state()?.attributes?.pressure_unit || '')}`)}${!current?row('Ймовірність опадів',`${fmt(percent(entry.precipitation_probability))} %`)+row('Кількість опадів',`${fmt(entry.precipitation,1)} ${esc(this._state()?.attributes?.precipitation_unit || '')}`):''}<p class="hint">${current?'Поточні вимірювання джерела погоди.':'Прогноз джерела погоди; час — Europe/Kyiv.'}</p>`;
-      }
-      return `<div class="shade" data-action="close"></div><section class="popover" role="dialog" aria-modal="true" aria-labelledby="pop-title"><div class="pop-head"><span class="pop-title" id="pop-title">${esc(title)}</span><button class="icon-button" data-action="close" data-focus="close" aria-label="Закрити">${icon('close')}</button></div>${content}</section>`;
+      return `${segment('palette','Палітра',[['olive','Олива'],['graphite','Графіт']],this._appearance.palette || this._config.palette)}${segment('mode','Оформлення',[['auto','Авто'],['light','Світла'],['dark','Темна']],this._appearance.mode || this._config.mode)}<label class="toggle-row" for="frame-toggle">Рамка<input id="frame-toggle" data-action="frame" data-focus="frame" type="checkbox" ${this._frame==='on'?'checked':''}></label><p class="hint">Спільна для всіх карток ТЕХНіКА на цьому пристрої.</p><div class="save-status" role="status">${({loading:'Завантажуємо ваші налаштування…',saving:'Зберігаємо в профілі HA…',saved:'Вигляд збережено у вашому профілі HA.',local:'Збережено на пристрої. Профіль HA поки недоступний.'})[this._profileStatus] || 'Налаштування вигляду для вашого профілю HA.'}</div>`;
+    }
+    _detailContent(entry) {
+      const unit = esc(this._state()?.attributes?.temperature_unit || '°C');
+      const rows = this._dataRows(entry,true);
+      if (number(entry.temperature) === null && !entry.condition && !rows) return '<p class="dialog-status">Для цього періоду немає даних прогнозу.</p>';
+      return `<div class="detail-weather">${weatherIcon(entry.condition)}<div>${number(entry.temperature) !== null ? `<strong>${signed(entry.temperature)} <small>${unit}</small></strong>` : ''}${entry.condition ? `<div class="detail-description">${esc(CONDITIONS[entry.condition] || 'Погодні дані')}</div>` : ''}</div></div>${rows}<p class="hint">Прогноз джерела погоди · Київський час</p>`;
     }
     _click(event) {
       const button = event.target.closest('[data-action]');
@@ -380,16 +445,23 @@
       if (action==='appearance') {
         this._appearance[button.dataset.key]=button.dataset.value; this._persistPreferences(); this._render(); return;
       }
-      if (action==='close' || action==='settings' && this._open==='settings') { this._close(); return; }
-      this._returnFocus = button.dataset.focus;
-      if (action==='settings' || action==='current') { this._open=action; this._detail=null; }
-      else {
+      if (action==='close') { this._close(); return; }
+      if (action==='back') {
+        this._open='forecast'; this._detail=null; this._render();
+        if (this._detailReturnFocus) this._dialog.querySelector(`[data-focus="${this._detailReturnFocus}"]`)?.focus({preventScroll:true});
+        return;
+      }
+      if (!this._open) this._returnFocus = button.dataset.focus;
+      if (action==='settings' || action==='forecast') {
+        this._open=action; this._detail=null; this._forecastScroll=0;
+      } else if (['hour','day','rain'].includes(action)) {
         const i=Number(button.dataset.index);
         const entry=action==='day'?this._days()[i]:action==='rain'?this._rainSlots()[i]?.entry:(this._forecasts.hourly || []).filter(x=>x.time+HOUR>Date.now()).slice(0,this._config.hours)[i];
         const time=entry?.time || (action==='rain'?this._rainSlots()[i]?.time:Date.now());
+        this._detailReturnFocus=button.dataset.focus;
         this._open='detail'; this._detail={entry:entry || {},time};
-      }
-      this._render(); this.shadowRoot.querySelector('.popover button')?.focus({preventScroll:true});
+      } else return;
+      this._render(); this._dialog.querySelector('[data-action=close]')?.focus({preventScroll:true});
     }
     _change(event) {
       if (event.target.dataset.action!=='frame') return;
@@ -404,7 +476,7 @@
       if (!this._open) return;
       if (event.key==='Escape') { event.preventDefault(); event.stopPropagation(); this._close(); return; }
       if (event.key!=='Tab') return;
-      const focusable=[...this.shadowRoot.querySelectorAll('.popover button,.popover input,.popover select')];
+      const focusable=[...this._dialog.querySelectorAll('button,input,select')];
       const first=focusable[0], last=focusable.at(-1);
       if (event.shiftKey && this.shadowRoot.activeElement===first) { event.preventDefault(); last?.focus(); }
       else if (!event.shiftKey && this.shadowRoot.activeElement===last) { event.preventDefault(); first?.focus(); }
@@ -436,7 +508,7 @@
       const entities=Object.keys(this._hass?.states || {}).filter(id=>id.startsWith('weather.'));
       if (cfg.entity && !entities.includes(cfg.entity)) entities.push(cfg.entity);
       const select=(key,label,options) => `<label>${label}<select data-key="${key}">${options.map(([value,text])=>`<option value="${esc(value)}" ${cfg[key]===value?'selected':''}>${esc(text)}</option>`).join('')}</select></label>`;
-      this.shadowRoot.innerHTML=`<style>:host{display:block;font:14px/1.35 var(--paper-font-common-base_-_font-family,Roboto,system-ui,sans-serif);color:var(--primary-text-color);font-variant-numeric:tabular-nums}*{box-sizing:border-box}.form{display:grid;gap:14px}label{display:grid;gap:6px;font-size:13px}select,input[type=text],input[type=number]{font:inherit;padding:10px;width:100%;border:1px solid var(--divider-color);border-radius:8px;color:var(--primary-text-color);background:var(--card-background-color)}.check{display:flex;justify-content:space-between;align-items:center}.check input{width:20px;height:20px}.two{display:grid;grid-template-columns:1fr 1fr;gap:12px}p{font-size:12px;color:var(--secondary-text-color);margin:0}</style><div class="form">${select('entity','Сутність погоди',[['','Автоматично'],...entities.map(id=>[id,`${this._hass?.states[id]?.attributes?.friendly_name || id} · ${id}`])])}<label>Заголовок<input type="text" data-key="title" value="${esc(cfg.title)}"></label><label>Місто / місце<input type="text" data-key="city" placeholder="Назва сутності, якщо порожньо" value="${esc(cfg.city)}"></label><div class="two">${select('palette','Палітра',[['olive','Олива'],['graphite','Графіт']])}${select('mode','Оформлення',[['auto','Авто — тема HA'],['light','Світла'],['dark','Темна']])}</div><div class="two"><label>Кількість годин (3–8)<input type="number" min="3" max="8" step="1" data-key="hours" value="${cfg.hours}"></label><label>Дні / періоди (3–7)<input type="number" min="3" max="7" step="1" data-key="days" value="${cfg.days}"></label></div>${[['show_hourly','Погодинний прогноз'],['show_precipitation','Шкала ймовірності опадів'],['show_daily','Добовий прогноз']].map(([key,label])=>`<label class="check">${label}<input type="checkbox" data-key="${key}" ${cfg[key]?'checked':''}></label>`).join('')}<p>Палітра й оформлення тут — початкові значення. Особистий вигляд і спільна рамка змінюються через шестерню на картці та зберігаються у профілі HA. Усі дати й години — Europe/Kyiv.</p></div>`;
+      this.shadowRoot.innerHTML=`<style>:host{display:block;font:14px/1.35 var(--paper-font-common-base_-_font-family,Roboto,system-ui,sans-serif);color:var(--primary-text-color);font-variant-numeric:tabular-nums}*{box-sizing:border-box}.form{display:grid;gap:14px}label{display:grid;gap:6px;font-size:13px}select,input[type=text],input[type=number]{font:inherit;padding:10px;width:100%;border:1px solid var(--divider-color);border-radius:8px;color:var(--primary-text-color);background:var(--card-background-color)}.check{display:flex;justify-content:space-between;align-items:center}.check input{width:20px;height:20px}.two{display:grid;grid-template-columns:1fr 1fr;gap:12px}p{font-size:12px;color:var(--secondary-text-color);margin:0}</style><div class="form">${select('entity','Сутність погоди',[['','Автоматично'],...entities.map(id=>[id,`${this._hass?.states[id]?.attributes?.friendly_name || id} · ${id}`])])}<label>Заголовок<input type="text" data-key="title" value="${esc(cfg.title)}"></label><label>Місто / місце<input type="text" data-key="city" placeholder="Назва сутності, якщо порожньо" value="${esc(cfg.city)}"></label><div class="two">${select('palette','Палітра',[['olive','Олива'],['graphite','Графіт']])}${select('mode','Оформлення',[['auto','Авто — тема HA'],['light','Світла'],['dark','Темна']])}</div><div class="two"><label>Кількість годин (3–8)<input type="number" min="3" max="8" step="1" data-key="hours" value="${cfg.hours}"></label><label>Дні / періоди (3–7)<input type="number" min="3" max="7" step="1" data-key="days" value="${cfg.days}"></label></div>${[['show_hourly','Погодинний прогноз'],['show_precipitation','Шкала ймовірності опадів'],['show_daily','Добовий прогноз']].map(([key,label])=>`<label class="check">${label}<input type="checkbox" data-key="${key}" ${cfg[key]?'checked':''}></label>`).join('')}<p>Погодинний і добовий прогнози та шкала опадів відкриваються кнопкою «Детальніше». Палітра й оформлення тут — початкові значення. Особистий вигляд і спільна рамка змінюються через шестерню на картці та зберігаються у профілі HA. Усі дати й години — Europe/Kyiv.</p></div>`;
     }
   }
   if (!customElements.get(`${TAG}-editor`)) customElements.define(`${TAG}-editor`,PogodaTehnikaEditor);
